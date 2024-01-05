@@ -81,7 +81,7 @@ void loop()
   Serial.println(sensorStatus);
   delay(500);
   
-  if(sensorStatus){
+  if(sensorStatus == 1){
     Serial.println("Bewegung !!!");
     Serial.println(millis());
     digitalWrite(LED, HIGH);
@@ -91,7 +91,6 @@ void loop()
     wechselAnzeige(closeAnzeige);
     delay(500);
     display.clear();
-    
     while (kontrolPasswort != passwort) {
       // warten auf Tasteneingabe
       Taste = Tastenfeld.getKey();
@@ -123,23 +122,8 @@ void loop()
           kontrolPasswort = "";
           eingabe = "";
           wechselAnzeige(openAnzeige);
-
         }
       } // Ende safe verriegeln
-
-      // Zustand Safe verriegelt
-      if (Taste !='*' and Taste !='#'){
-        if(Taste and eingabe.length() <= 4){
-          // display Zeile eintellen
-          display.setCursor(cursorPos, 1);
-          // gedrückte auf Dispaly anzeigen
-          display.print(Taste);
-          // gedrückte auf Display schieben  
-          cursorPos = cursorPos + 1;
-          // eingabe merken und in eingabe speichern
-          eingabe = eingabe + Taste;
-        }
-      }
 
       // aktuelle Eingabe mit Passwort vergleichen
       if (passwort == kontrolPasswort){

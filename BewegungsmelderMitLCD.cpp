@@ -82,7 +82,6 @@ void loop()
   delay(500);
   
   if(sensorStatus){
-    do {
     Serial.println("Bewegung !!!");
     Serial.println(millis());
     digitalWrite(LED, HIGH);
@@ -92,69 +91,68 @@ void loop()
     wechselAnzeige(closeAnzeige);
     delay(500);
     display.clear();
-    }
+    
     while (kontrolPasswort != passwort) {
-    // warten auf Tasteneingabe
-    Taste = Tastenfeld.getKey();
-    // Bewegung! und wartet auf Eingabe fuer Passwort zu kontrollieren 
-    // Zulässig 0-9 und a-D
-    if(Taste !='*' and Taste !='#') {
-      if(Taste and eingabe.length() <= 4){
-        // display Zeile eintellen
-        display.setCursor(cursorPos, 1);
-        // gedrückte auf Dispaly anzeigen
-        display.print(Taste);
-        // gedrückte auf Display schieben  
-        cursorPos = cursorPos + 1;
-        // eingabe merken und in eingabe speichern
-        eingabe = eingabe + Taste;
+      // warten auf Tasteneingabe
+      Taste = Tastenfeld.getKey();
+      // Bewegung! und wartet auf Eingabe fuer Passwort zu kontrollieren 
+      // Zulässig 0-9 und a-D
+      if(Taste !='*' and Taste !='#') {
+        if(Taste and eingabe.length() <= 4){
+          // display Zeile eintellen
+          display.setCursor(cursorPos, 1);
+          // gedrückte auf Dispaly anzeigen
+          display.print(Taste);
+          // gedrückte auf Display schieben  
+          cursorPos = cursorPos + 1;
+          // eingabe merken und in eingabe speichern
+          eingabe = eingabe + Taste;
+        }
+      } //PassEingabe gespeichert
+      // kontrolPasswort  bestätigen mit * --> Safe wird verriegelt
+      if(Taste=='*'){
+        if(eingabe.length() == 4){
+          kontrolPasswort = eingabe;
+          eingabe = "";
+
+        } else {
+          // Passwort war kürzer als 4 zeichen
+          delay(500);
+          wechselAnzeige(fehlerAnzeige);
+          display.setCursor(cursorPos, 1);
+          kontrolPasswort = "";
+          eingabe = "";
+          wechselAnzeige(openAnzeige);
+
+        }
+      } // Ende safe verriegeln
+
+      // Zustand Safe verriegelt
+      if (Taste !='*' and Taste !='#'){
+        if(Taste and eingabe.length() <= 4){
+          // display Zeile eintellen
+          display.setCursor(cursorPos, 1);
+          // gedrückte auf Dispaly anzeigen
+          display.print(Taste);
+          // gedrückte auf Display schieben  
+          cursorPos = cursorPos + 1;
+          // eingabe merken und in eingabe speichern
+          eingabe = eingabe + Taste;
+        }
       }
-    } //PassEingabe gespeichert
-    // kontrolPasswort  betätigen mit * --> Safe wird verriegelt
-    if(Taste=='*'){
-      if(eingabe.length() == 4){
-        kontrolPasswort = eingabe;
-        eingabe = "";
- 
-      } else {
-        // Passwort war kürzer als 4 zeichen
-        delay(500);
-        wechselAnzeige(fehlerAnzeige);
-        display.setCursor(cursorPos, 1);
+
+      // aktuelle Eingabe mit Passwort vergleichen
+      if (passwort == kontrolPasswort){
+        Serial.println("Keine Bewegung");
+        digitalWrite(LED, LOW);
+        digitalWrite (piezo, LOW);
+        wechselAnzeige(openAnzeige);
         kontrolPasswort = "";
         eingabe = "";
-        wechselAnzeige(openAnzeige);
-
-      }
-    } // Ende safe verriegeln
-
-    // Zustand Safe verriegelt
-    if (Taste !='*' and Taste !='#'){
-      if(Taste and eingabe.length() <= 4){
-        // display Zeile eintellen
-        display.setCursor(cursorPos, 1);
-        // gedrückte auf Dispaly anzeigen
-        display.print(Taste);
-        // gedrückte auf Display schieben  
-        cursorPos = cursorPos + 1;
-        // eingabe merken und in eingabe speichern
-        eingabe = eingabe + Taste;
-      }
-    }
-
-    // aktuelle Eingabe mit Passwort vergleichen
-    if (passwort == kontrolPasswort){
-      Serial.println("Keine Bewegung");
-   	  digitalWrite(LED, LOW);
-      digitalWrite (piezo, LOW);
-      wechselAnzeige(openAnzeige);
-      kontrolPasswort = "";
-      eingabe = "";
-      open = true;
-    } // Safe offen  --> Startposition
-      }
- }
-  } else {
+        open = true;
+      } // Safe offen  --> Startposition
+      } 
+    } else {
         display.print(openAnzeige);
       }
 }

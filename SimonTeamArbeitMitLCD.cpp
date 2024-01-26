@@ -80,15 +80,17 @@ void setup() {
   digitalWrite (piezo, LOW);
 }
 
-void loop()
-{
+void loop(){
   if  (level == 1)
-	generate_sequence(); // generate a sequence;
+    // generate a sequence;
+	generate_sequence(); 
   
-  if (digitalRead(A4)  == LOW || level != 1) // If start button is pressed or you're winning
-  {
-    show_sequence();    // show the sequence
-    get_sequence();     // wait for your sequence 
+  // If start button is pressed or you're winning
+  if (digitalRead(A4)  == LOW || level != 1){   
+    display.print(glueckAnzeige);
+    show_sequence();    
+    get_sequence();
+  	display.clear();
   }
 }
 

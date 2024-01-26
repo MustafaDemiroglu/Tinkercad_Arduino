@@ -34,7 +34,6 @@ int piezo = 6;
 // ##### LCD #####
 #include <Adafruit_LiquidCrystal.h>
 Adafruit_LiquidCrystal display(0);
-int cursorPos = 0;
 String openAnzeige = "-Willkommen !!!-";
 String startAnzeige = "Druecken Start";
 String richtigAnzeige = "Bestanden";
@@ -45,7 +44,8 @@ String glueckAnzeige = "Viel Glueck !!!";
 void wechselAnzeige(String anzeige) {
   display.clear();
   display.print(anzeige);
-  cursorPos = 0;
+  delay(300);
+  display.clear();
 }
 
 void setup() {  
@@ -81,16 +81,15 @@ void setup() {
 }
 
 void loop(){
-  if  (level == 1)
+  
+  if  (level == 1) 
     // generate a sequence;
 	generate_sequence(); 
-  
+  	
   // If start button is pressed or you're winning
   if (digitalRead(A4)  == LOW || level != 1){   
-    display.print(glueckAnzeige);
     show_sequence();    
     get_sequence();
-  	display.clear();
   }
 }
 
@@ -100,14 +99,14 @@ void  show_sequence()
   digitalWrite(3, LOW);
   digitalWrite(4, LOW);
   digitalWrite(5, LOW);
-
+  
   for (int i = 0; i < level; i++)
   {
     digitalWrite(sequence[i],  HIGH);
     delay(velocity);
     digitalWrite(sequence[i], LOW);
     delay(200);
-  }
+  }	
 }
 
 void  get_sequence()
@@ -198,10 +197,7 @@ void wrong_sequence()
     digitalWrite(4,  HIGH);
     digitalWrite(5, HIGH);
     digitalWrite (piezo, HIGH);
-    display.clear();
-    wechselAnzeige(falschAnzeige);
-    delay(250);
-    display.clear();  
+    delay(250); 
     digitalWrite (piezo, LOW); 
     digitalWrite(2, LOW);
     digitalWrite(3,  LOW);
@@ -211,6 +207,7 @@ void wrong_sequence()
   }
   level  = 1;
   velocity = 1000;
+  wechselAnzeige(falschAnzeige);
 }
 
 void right_sequence()
@@ -220,7 +217,6 @@ void right_sequence()
   digitalWrite(4, LOW);
   digitalWrite(5, LOW);
   delay(200); 
-  wechselAnzeige(richtigAnzeige);
   digitalWrite(2,  HIGH);
   digitalWrite(3, HIGH);
   digitalWrite(4, HIGH);
@@ -231,9 +227,9 @@ void right_sequence()
   digitalWrite(3, LOW);
   digitalWrite(4, LOW);
   digitalWrite(5, LOW);
-  display.clear(); 
   digitalWrite (piezo, LOW);
   delay(100);
+  wechselAnzeige(richtigAnzeige);
 
   if  (level < MAX_LEVEL);
       level++;

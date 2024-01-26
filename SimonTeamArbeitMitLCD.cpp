@@ -26,7 +26,6 @@ const int MAX_LEVEL  = 100;
 int sequence[MAX_LEVEL];
 int your_sequence[MAX_LEVEL];
 int level  = 1;
-
 int velocity = 1000;
 
 // ##### PIEZO ######
@@ -61,7 +60,7 @@ void setup() {
   pinMode(5, OUTPUT);
 
   digitalWrite(2, LOW);
-  digitalWrite(3,  LOW);
+  digitalWrite(3, LOW);
   digitalWrite(4, LOW);
   digitalWrite(5, LOW);
 
@@ -70,25 +69,26 @@ void setup() {
 
   // Lcd initialisieren
   display.begin(16,2);
+  delay(250);
   display.print(openAnzeige);
-  delay(100);
+  digitalWrite (piezo, HIGH);
+  delay(250);
   display.clear();
   display.print(startAnzeige);
+  delay(250);
+  display.clear();
+  digitalWrite (piezo, LOW);
 }
 
 void loop()
 {
   if  (level == 1)
-  {  
-  	generate_sequence();//generate a sequence;
-  }
-
-  if (digitalRead(A4)  == LOW || level != 1) //If start button is pressed or you're winning
+	generate_sequence(); // generate a sequence;
+  
+  if (digitalRead(A4)  == LOW || level != 1) // If start button is pressed or you're winning
   {
-    display.clear();
-    display.print(glueckAnzeige); 
-    show_sequence();    //show the sequence
-    get_sequence();     //wait for your sequence
+    show_sequence();    // show the sequence
+    get_sequence();     // wait for your sequence 
   }
 }
 
@@ -96,7 +96,7 @@ void  show_sequence()
 {
   digitalWrite(2, LOW);
   digitalWrite(3, LOW);
-  digitalWrite(4,  LOW);
+  digitalWrite(4, LOW);
   digitalWrite(5, LOW);
 
   for (int i = 0; i < level; i++)
@@ -110,7 +110,7 @@ void  show_sequence()
 
 void  get_sequence()
 {
-  int flag = 0; //this flag indicates if the sequence is correct
+  int flag = 0; // this flag indicates if the sequence is correct
 
   for  (int i = 0; i < level; i++)
   {
@@ -180,7 +180,7 @@ void  get_sequence()
 
 void generate_sequence()
 {
-  randomSeed(millis());  //in this way is really random!!!
+  randomSeed(millis());  // in this way is really random!!!
   for (int i = 0; i < MAX_LEVEL; i++)
   {
   sequence[i]  = random(2,6);
@@ -217,22 +217,21 @@ void right_sequence()
   digitalWrite(3, LOW);
   digitalWrite(4, LOW);
   digitalWrite(5, LOW);
-  delay(250);
+  delay(200); 
+  wechselAnzeige(richtigAnzeige);
   digitalWrite(2,  HIGH);
   digitalWrite(3, HIGH);
   digitalWrite(4, HIGH);
   digitalWrite(5, HIGH);
   digitalWrite (piezo, HIGH);
-  display.clear();  
-  wechselAnzeige(richtigAnzeige);
-  delay(500);
-  display.clear(); 
-  digitalWrite (piezo, LOW);  
+  delay(300);  
   digitalWrite(2,  LOW);
   digitalWrite(3, LOW);
   digitalWrite(4, LOW);
   digitalWrite(5, LOW);
-  delay(500);
+  display.clear(); 
+  digitalWrite (piezo, LOW);
+  delay(100);
 
   if  (level < MAX_LEVEL);
       level++;
